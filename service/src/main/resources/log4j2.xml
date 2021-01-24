@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" >
+    <Appenders>
+        <ScriptAppenderSelector name="ScriptSelect">
+            <Script language="JavaScript"><![CDATA[
+              java.lang.System.out.println("=======================================================================");
+              java.lang.System.out.print("===  Diasoft Digital Q ScriptAppenderSelector: " ); 
+              if (java.lang.System.getenv("QSAVER_HOST") == null || java.lang.System.getenv("QSAVER_PORT") == null) {               
+                java.lang.System.out.println("use ConsoleAppender" );                               
+              } else {
+                java.lang.System.out.println("use SocketAppender" );
+                java.lang.System.out.print("===  SocketAppender: QSAVER_HOST = " + java.lang.System.getenv("QSAVER_HOST"));
+                java.lang.System.out.println(", QSAVER_PORT = " + java.lang.System.getenv("QSAVER_PORT"));               
+              }
+              java.lang.System.out.println("=======================================================================");              
+              java.lang.System.getenv("QSAVER_HOST") != null && java.lang.System.getenv("QSAVER_PORT") != null ? "SocketAppender" : "ConsoleAppender";
+            ]]></Script>
+            <AppenderSet>
+                <Socket name="SocketAppender" host="${env:QSAVER_HOST}" port="${env:QSAVER_PORT}"
+                    advertise="true" >
+                    <DQLayout />
+                </Socket>
+                <Console name="ConsoleAppender" target="SYSTEM_OUT">
+                    <DQLayout format="text"/>
+                </Console>               
+            </AppenderSet>
+        </ScriptAppenderSelector>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="ScriptSelect" />
+        </Root>
+    </Loggers>
+</Configuration>
